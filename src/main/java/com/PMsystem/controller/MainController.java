@@ -1,16 +1,33 @@
 package com.PMsystem.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.PMsystem.entity.UserEntity;
+import com.PMsystem.repository.UserRepo;
+import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/main")
 public class MainController {
 
+    @Autowired
+    private UserRepo userRepo;
+
     @GetMapping
-    private String showUsers(){
-        return "main";
+    private List<UserEntity> showUsers(){
+        return userRepo.findAll();
     }
 
+//    @GetMapping("{id}")
+//    private UserEntity showOne(@PathVariable String id){
+//        return userRepo.findById(id);
+//    }
+
+    @PostMapping
+    private List<UserEntity> addUser(){
+        return userRepo.findAll();
+    }
 }
