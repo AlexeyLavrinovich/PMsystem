@@ -2,8 +2,8 @@ package com.PMsystem.service;
 
 import com.PMsystem.entity.Role;
 import com.PMsystem.entity.UserEntity;
-import com.PMsystem.exception.UserAlreadyExistsException;
-import com.PMsystem.exception.UserNotFoundException;
+import com.PMsystem.exception.AlreadyExistsException;
+import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.model.User;
 import com.PMsystem.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +18,14 @@ public class UserService {
     @Autowired
     private UserRepo userRepo;
 
-    public boolean addUser(UserEntity user) throws UserAlreadyExistsException {
+    public void addUser(UserEntity user) throws AlreadyExistsException {
         UserEntity userFromDb = userRepo.findByUsername(user.getUsername());
         if(userFromDb != null){
-            throw new UserAlreadyExistsException("User with this username already exists! Try something else!");
+            throw new AlreadyExistsException("User with this username already exists! Try something else!");
         }
         user.setRole(Role.USER);
+        user.setAdmin(false);
         userRepo.save(user);
-        return true;
     }
 
     public List<User> loadUsers() {
@@ -34,27 +34,27 @@ public class UserService {
         }).collect(Collectors.toList());
     }
 
-    public User loadUserById(Long id) throws UserNotFoundException {
+    public User loadUserById(Long id) throws NotFoundException {
         UserEntity user = userRepo.findById(id).get();
         if (user == null) {
-            throw new UserNotFoundException("Can't find user!");
+            throw new NotFoundException("Can't find user!");
         }
         return User.toModel(user);
     }
 
-    public void changeRole(Long id) throws UserNotFoundException {
+    public void changeRole(Long id) throws NotFoundException {
         UserEntity user = userRepo.findById(id).get();
         if (user == null) {
-            throw new UserNotFoundException("Can't find user!");
+            throw new NotFoundException("Can't find user!");
         }
         user.setAdmin(!user.getAdmin());
         userRepo.save(user);
     }
 
-    public void deleteUser(Long id) throws UserNotFoundException {
+    public void deleteUser(Long id) throws NotFoundException {
         UserEntity user = userRepo.findById(id).get();
         if (user == null) {
-            throw new UserNotFoundException("Can't find user!");
+            throw new NotFoundException("Can't find user!");
         }
         userRepo.delete(user);
     }

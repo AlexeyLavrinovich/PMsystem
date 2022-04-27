@@ -1,8 +1,8 @@
 package com.PMsystem.controller;
 
 import com.PMsystem.entity.UserEntity;
-import com.PMsystem.exception.UserAlreadyExistsException;
-import com.PMsystem.exception.UserNotFoundException;
+import com.PMsystem.exception.AlreadyExistsException;
+import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ public class UserController {
     private ResponseEntity showOne(@PathVariable Long id){
         try{
             return ResponseEntity.ok(userService.loadUserById(id));
-        } catch (UserNotFoundException e){
+        } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Something bad happened...");
@@ -40,7 +40,7 @@ public class UserController {
         try{
             userService.addUser(user);
             return ResponseEntity.ok("User was successfully add!");
-        } catch (UserAlreadyExistsException e) {
+        } catch (AlreadyExistsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e){
             return ResponseEntity.badRequest().body("Something bad happened...");
@@ -52,7 +52,7 @@ public class UserController {
         try{
             userService.changeRole(id);
             return ResponseEntity.ok("User was successfully updated!");
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e){
             return ResponseEntity.badRequest().body("Something bad happened...");
@@ -64,7 +64,7 @@ public class UserController {
         try{
             userService.deleteUser(id);
             return ResponseEntity.ok("User was successfully deleted!");
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e){
             return ResponseEntity.badRequest().body("Something bad happened...");

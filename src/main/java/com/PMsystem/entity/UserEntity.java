@@ -1,9 +1,9 @@
 package com.PMsystem.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "usr")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -11,8 +11,11 @@ public class UserEntity {
     private String username;
     private String password;
     private Boolean isAdmin;
-
     private Role role;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<ProjectEntity> projects;
+
 
     public Role getRole() {
         return role;
