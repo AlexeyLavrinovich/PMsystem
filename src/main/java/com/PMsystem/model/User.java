@@ -3,11 +3,15 @@ package com.PMsystem.model;
 import com.PMsystem.entity.Role;
 import com.PMsystem.entity.UserEntity;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class User {
     private Long id;
     private String username;
     private Boolean isAdmin;
     private Role role;
+    private List<Project> projects;
 
     public static User toModel(UserEntity entity){
         User model = new User();
@@ -15,10 +19,19 @@ public class User {
         model.setUsername(entity.getUsername());
         model.setAdmin(entity.getAdmin());
         model.setRole(entity.getRole());
+        model.setProjects(entity.getProjects().stream().map(Project::toModel).collect(Collectors.toList()));
         return model;
     }
 
     public User() {
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     public Long getId() {

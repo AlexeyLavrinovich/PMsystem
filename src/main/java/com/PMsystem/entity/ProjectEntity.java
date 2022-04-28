@@ -1,6 +1,7 @@
 package com.PMsystem.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class ProjectEntity {
@@ -38,5 +39,13 @@ public class ProjectEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProjectEntity project = (ProjectEntity) o;
+        return Objects.equals(name, project.name);
     }
 }

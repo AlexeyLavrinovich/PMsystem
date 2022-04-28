@@ -16,6 +16,20 @@ public class UserEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<ProjectEntity> projects;
 
+    public UserEntity() {
+    }
+
+    public List<ProjectEntity> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<ProjectEntity> projects) {
+        this.projects = projects;
+    }
+
+    public void addProject(ProjectEntity project) {
+        this.projects.add(project);
+    }
 
     public Role getRole() {
         return role;
@@ -23,9 +37,6 @@ public class UserEntity {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    public UserEntity() {
     }
 
     public Long getId() {
