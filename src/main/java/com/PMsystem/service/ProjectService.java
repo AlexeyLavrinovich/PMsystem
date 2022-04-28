@@ -25,12 +25,7 @@ public class ProjectService {
     }
 
     public void setProject(ProjectEntity project, Long userId) throws NotFoundException, AlreadyExistsException {
-        userService.addProjectToUser(userId, project);
-        ProjectEntity projectFromDb = projectRepo.findByName(project.getName());
-        if (projectFromDb != null) {
-            throw new AlreadyExistsException("Project with this name already exists!");
-        }
-        projectRepo.save(project);
+        projectRepo.save(userService.addProjectToUser(userId, project));
     }
 
     public void deleteProject(Long id) throws NotFoundException {
