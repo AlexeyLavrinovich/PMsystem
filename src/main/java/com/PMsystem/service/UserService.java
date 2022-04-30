@@ -34,45 +34,42 @@ public class UserService {
         return userRepo.findAll().stream().map(User::toModel).collect(Collectors.toList());
     }
 
-    public User loadUserById(Long id) throws NotFoundException {
+    public UserEntity findUserById(Long id) throws NotFoundException {
         Optional<UserEntity> user = userRepo.findById(id);
         if (user.isEmpty()) {
             throw new NotFoundException("Can't find user!");
         }
-        return User.toModel(user.get());
+        return user.get();
+    }
+
+    public User loadUserById(Long id) throws NotFoundException {
+        return User.toModel(findUserById(id));
     }
 
     public void changeRole(Long id) throws NotFoundException {
-        Optional<UserEntity> userFromDb = userRepo.findById(id);
-        if (userFromDb.isEmpty()) {
-            throw new NotFoundException("Can't find user!");
-        }
-        UserEntity user = userFromDb.get();
+        UserEntity user = findUserById(id);
         user.setAdmin(!user.getAdmin());
         userRepo.save(user);
     }
 
     public void deleteUser(Long id) throws NotFoundException {
-        Optional<UserEntity> user = userRepo.findById(id);
-        if (user.isEmpty()) {
-            throw new NotFoundException("Can't find user!");
-        }
-        userRepo.delete(user.get());
+        userRepo.delete(findUserById(id));
     }
 
-    public ProjectEntity addProjectToUser(Long userId, ProjectEntity project) throws NotFoundException, AlreadyExistsException {
-        Optional<UserEntity> userFromDb = userRepo.findById(userId);
-        if (userFromDb.isEmpty()){
-            throw new NotFoundException("User doesn't exists!");
-        }
-        UserEntity user = userFromDb.get();
+    public Optional<ProjectEntity> findProjectByName(UserEntity user, ProjectEntity project) {
         Optional<ProjectEntity> sameProjectName = user.getProjects().stream()
                 .filter(pr -> pr.equals(project))
                 .findAny();
-        if (sameProjectName.isPresent()){
-            throw new AlreadyExistsException("Project was already created!");
+        return sameProjectName;
+    }
+
+    public ProjectEntity addProjectToUser(Long userId, ProjectEntity project) throws NotFoundException, AlreadyExistsException {
+        UserEntity user = findUserById(userId);
+        if (findProjectByName(user, project).isPresent()){
+            throw new AlreadyExistsException("Project already exists!");
         }
         project.setUser(user);
         return project;
     }
+
 }

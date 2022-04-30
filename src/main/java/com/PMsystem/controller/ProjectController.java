@@ -28,7 +28,9 @@ public class ProjectController {
     private ResponseEntity getOneProject(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(projectService.getOneProject(id));
-        } catch (Exception e) {
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e) {
             return ResponseEntity.badRequest().body("Something bad happened...");
         }
     }
@@ -38,23 +40,21 @@ public class ProjectController {
         try {
             projectService.setProject(project, userId);
             return ResponseEntity.ok("Project was successfully create!");
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | AlreadyExistsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (AlreadyExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Something bad happened...");
         }
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity renameProject(@PathVariable Long id, @RequestBody ProjectEntity project) {
+    private ResponseEntity renameProject(@RequestParam Long userId, @PathVariable Long id, @RequestBody ProjectEntity project) {
         try {
-            projectService.renameProject(id, project);
+            projectService.renameProject(userId, id, project);
             return ResponseEntity.ok("Project was successfully renamed!");
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | AlreadyExistsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Something bad happened...");
         }
     }

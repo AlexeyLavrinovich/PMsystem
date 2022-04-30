@@ -1,6 +1,7 @@
 package com.PMsystem.service;
 
 import com.PMsystem.entity.ProjectEntity;
+import com.PMsystem.entity.UserEntity;
 import com.PMsystem.exception.AlreadyExistsException;
 import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.model.Project;
@@ -28,30 +29,31 @@ public class ProjectService {
         projectRepo.save(userService.addProjectToUser(userId, project));
     }
 
-    public void deleteProject(Long id) throws NotFoundException {
-        Optional<ProjectEntity> projectFromDb = projectRepo.findById(id);
-        if (projectFromDb.isEmpty()) {
+    public ProjectEntity findProjectById(Long id) throws NotFoundException {
+        Optional<ProjectEntity> project = projectRepo.findById(id);
+        if (project.isEmpty()) {
             throw new NotFoundException("Project doesn't exists!");
         }
-        ProjectEntity project = projectFromDb.get();
-        projectRepo.delete(project);
+        return project.get();
     }
 
-    public void renameProject(Long id, ProjectEntity newProject) throws NotFoundException {
-        Optional<ProjectEntity> projectFromDb = projectRepo.findById(id);
-        if (projectFromDb.isEmpty()) {
-            throw new NotFoundException("Project doesn't exists!");
+    public void deleteProject(Long id) throws NotFoundException {
+        projectRepo.delete(findProjectById(id));
+    }
+
+    public void renameProject(Long userId, Long id, ProjectEntity newProject) throws NotFoundException, AlreadyExistsException {
+        UserEntity user = userService.findUserById(userId);
+        ProjectEntity project = findProjectById(id);
+        if (userService.findProjectByName(user, project).isEmpty()){
+            throw new NotFoundException("Can't find project!");
+        } else if (userService.findProjectByName(user, newProject).isPresent()) {
+            throw new AlreadyExistsException("Project already exists!");
         }
-        ProjectEntity project = projectFromDb.get();
         project.setName(newProject.getName());
         projectRepo.save(project);
     }
 
     public Project getOneProject(Long id) throws NotFoundException {
-        Optional<ProjectEntity> projectFromDb = projectRepo.findById(id);
-        if (projectFromDb.isEmpty()) {
-            throw new NotFoundException("Project doesn't exists!");
-        }
-        return Project.toModel(projectFromDb.get());
+        return Project.toModel(findProjectById(id));
     }
 }
