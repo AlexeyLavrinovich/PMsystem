@@ -1,7 +1,6 @@
-create sequence hibernate_sequence start 1 increment 1;
 
 create table user_entity (
-    id int8 not null,
+    id BIGSERIAL,
     username varchar(255) not null unique,
     password varchar(255) not null,
     role int4,
@@ -10,7 +9,7 @@ create table user_entity (
 );
 
 create table project_entity (
-    id int8 not null,
+    id BIGSERIAL,
     name varchar(255) not null,
     user_id int8,
     primary key (id)
