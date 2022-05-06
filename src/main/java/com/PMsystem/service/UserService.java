@@ -8,24 +8,35 @@ import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.model.User;
 import com.PMsystem.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+@Component
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public void addUser(UserEntity user) throws AlreadyExistsException {
         UserEntity userFromDb = userRepo.findByUsername(user.getUsername());
         if(userFromDb != null){
             throw new AlreadyExistsException("User with this username already exists! Try something else!");
         }
-        user.setRole(Role.USER);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Collections.singleton(Role.ROLE_USER));
         user.setAdmin(false);
         userRepo.save(user);
     }
@@ -46,9 +57,15 @@ public class UserService {
         return User.toModel(findUserById(id));
     }
 
-    public void changeRole(Long id) throws NotFoundException {
+    public void addRole(Long id) throws NotFoundException, AlreadyExistsException {
         UserEntity user = findUserById(id);
-        user.setAdmin(!user.getAdmin());
+        if (user.getAdmin()) {
+            throw new AlreadyExistsException("Admin status already set");
+        }
+        user.setAdmin(true);
+        Set<Role> roles = user.getRoles();
+        roles.add(Role.ROLE_ADMIN);
+        user.setRoles(roles);
         userRepo.save(user);
     }
 
@@ -72,4 +89,12 @@ public class UserService {
         return project;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity user = userRepo.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
+    }
 }
