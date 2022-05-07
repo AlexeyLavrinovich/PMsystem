@@ -7,6 +7,9 @@ import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.model.Project;
 import com.PMsystem.repository.ProjectRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +24,18 @@ public class ProjectService {
     @Autowired
     private UserService userService;
 
-    public List<Project> getProjects() {
-        return projectRepo.findAll().stream().map(Project::toModel).collect(Collectors.toList());
+    public Page<Project> getProjects(
+            Optional<Integer> page,
+            Optional<Integer> size,
+            Optional<String> sortBy
+    ) {
+        return projectRepo.findAll(
+                PageRequest.of(
+                        page.orElse(0),
+                        size.orElse(5),
+                        Sort.Direction.DESC, sortBy.orElse("id")
+                )
+        ).map(Project::toModel);
     }
 
     public void setProject(ProjectEntity project, Long userId) throws NotFoundException, AlreadyExistsException {

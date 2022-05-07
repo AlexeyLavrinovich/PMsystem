@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
@@ -16,9 +18,13 @@ public class ProjectController {
     private ProjectService projectService;
 
     @GetMapping
-    private ResponseEntity getProjects() {
+    private ResponseEntity getProjects(
+            @RequestParam Optional<Integer> page,
+            @RequestParam Optional<Integer> size,
+            @RequestParam Optional<String> sortBy
+    ) {
         try {
-            return ResponseEntity.ok(projectService.getProjects());
+            return ResponseEntity.ok(projectService.getProjects(page, size, sortBy));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Something bad happened...");
         }
