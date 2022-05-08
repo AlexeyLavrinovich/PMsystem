@@ -1,10 +1,15 @@
 package com.PMsystem.entity;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@SQLDelete(sql = "UPDATE project_entity SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +23,8 @@ public class ProjectEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private List<TaskEntity> tasks;
+
+    private boolean deleted = Boolean.FALSE;
 
     public ProjectEntity() {
     }

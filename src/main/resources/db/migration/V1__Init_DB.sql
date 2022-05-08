@@ -16,6 +16,7 @@ create table project_entity (
     name varchar(255) not null,
     description varchar(255) not null,
     user_id int8,
+    deleted boolean,
     primary key (id)
 );
 
@@ -23,6 +24,7 @@ create table task_entity (
     id BIGSERIAL,
     task varchar(255) not null,
     project_id int8,
+    deleted boolean,
     primary key (id)
 );
 
