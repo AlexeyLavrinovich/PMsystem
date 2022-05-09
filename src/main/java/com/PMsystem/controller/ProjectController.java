@@ -44,7 +44,7 @@ public class ProjectController {
     @PostMapping
     private ResponseEntity createProject(@RequestParam Long userId,@RequestBody ProjectEntity project) {
         try {
-            projectService.setProject(project, userId);
+            projectService.addProject(project, userId);
             return ResponseEntity.ok("Project was successfully create!");
         } catch (NotFoundException | AlreadyExistsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

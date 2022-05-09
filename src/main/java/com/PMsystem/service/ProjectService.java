@@ -36,7 +36,7 @@ public class ProjectService {
         ).map(Project::toModel);
     }
 
-    public void setProject(ProjectEntity project, Long userId) throws NotFoundException, AlreadyExistsException {
+    public void addProject(ProjectEntity project, Long userId) throws NotFoundException, AlreadyExistsException {
         projectRepo.save(userService.addProjectToUser(userId, project));
     }
 
