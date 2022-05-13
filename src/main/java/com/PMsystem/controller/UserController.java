@@ -37,7 +37,7 @@ public class UserController {
     private ResponseEntity changeRole(@PathVariable Long id){
         try{
             userService.addRole(id);
-            return ResponseEntity.ok("User was successfully updated!");
+            return ResponseEntity.ok("User was successfully update!");
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e){
@@ -49,7 +49,7 @@ public class UserController {
     private ResponseEntity deleteUser(@PathVariable Long id){
         try{
             userService.deleteUser(id);
-            return ResponseEntity.ok("User was successfully deleted!");
+            return ResponseEntity.ok("User was successfully delete!");
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e){
