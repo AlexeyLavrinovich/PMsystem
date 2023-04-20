@@ -19,12 +19,13 @@ public class ProjectController {
 
     @GetMapping
     private ResponseEntity getProjects(
+            @RequestParam Long userId,
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<Integer> size,
             @RequestParam Optional<String> sortBy
     ) {
         try {
-            return ResponseEntity.ok(projectService.getProjects(page, size, sortBy));
+            return ResponseEntity.ok(projectService.getProjects(userId, page, size, sortBy));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Something bad happened...");
         }

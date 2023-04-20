@@ -97,4 +97,9 @@ public class UserService implements UserDetailsService {
         }
         return user;
     }
+
+    public void updateEncode(UserEntity userEntity){
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userRepo.save(userEntity);
+    }
 }

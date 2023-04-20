@@ -1,5 +1,5 @@
 create table user_entity (
-    id BIGSERIAL,
+    id BIGINT auto_increment,
     username varchar(255) not null unique,
     password varchar(255) not null,
     is_admin boolean,
@@ -7,23 +7,23 @@ create table user_entity (
 );
 
 create table user_role (
-    user_id BIGSERIAL,
+    user_id BIGINT auto_increment,
     roles varchar(255)
 );
 
 create table project_entity (
-    id BIGSERIAL,
+    id BIGINT auto_increment,
     name varchar(255) not null,
     description varchar(255) not null,
-    user_id int8,
+    user_id BIGINT,
     deleted boolean,
     primary key (id)
 );
 
 create table task_entity (
-    id BIGSERIAL,
+    id BIGINT auto_increment,
     task varchar(255) not null,
-    project_id int8,
+    project_id BIGINT,
     deleted boolean,
     primary key (id)
 );

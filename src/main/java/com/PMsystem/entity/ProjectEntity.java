@@ -21,7 +21,7 @@ public class ProjectEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", fetch = FetchType.EAGER)
     private List<TaskEntity> tasks;
 
     private boolean deleted = Boolean.FALSE;

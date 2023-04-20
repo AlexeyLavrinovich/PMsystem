@@ -8,11 +8,13 @@ import com.PMsystem.model.Project;
 import com.PMsystem.repository.ProjectRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -23,17 +25,22 @@ public class ProjectService {
     private UserService userService;
 
     public Page<Project> getProjects(
+            Long userId,
             Optional<Integer> page,
             Optional<Integer> size,
             Optional<String> sortBy
     ) {
-        return projectRepo.findAll(
+        return  new PageImpl<Project>(projectRepo.findAll(
                 PageRequest.of(
                         page.orElse(0),
                         size.orElse(5),
                         Sort.Direction.DESC, sortBy.orElse("id")
                 )
-        ).map(Project::toModel);
+        )
+                .stream().filter(projectEntity -> projectEntity.getUser().getId().equals(userId))
+                .map(Project::toModel)
+                .collect(Collectors.toList()));
+
     }
 
     public void addProject(ProjectEntity project, Long userId) throws NotFoundException, AlreadyExistsException {
