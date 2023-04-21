@@ -8,6 +8,7 @@ import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.model.User;
 import com.PMsystem.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepo userRepo;
+    @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -98,8 +100,14 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public void updateEncode(UserEntity userEntity){
-        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        userRepo.save(userEntity);
+    public void updateEncode(){
+        List<UserEntity> users = userRepo.findAll();
+        if (users.size() < 4) {
+            for (UserEntity userEntity:
+                 users) {
+                userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+                userRepo.save(userEntity);
+            }
+        }
     }
 }
