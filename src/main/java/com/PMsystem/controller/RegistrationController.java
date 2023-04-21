@@ -15,24 +15,14 @@ public class RegistrationController {
     private UserService userService;
 
     @GetMapping
-    private ResponseEntity info() {
-        try{
-            return ResponseEntity.ok("Set your name and password");
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
+    public ResponseEntity info() {
+        return ResponseEntity.ok("Set your name and password");
     }
 
     @PostMapping
-    private ResponseEntity registration(@RequestBody UserEntity user){
-        try{
-            userService.addUser(user);
-            return ResponseEntity.ok("User was successfully add!");
-        } catch (AlreadyExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
+    public ResponseEntity registration(@RequestBody UserEntity user) throws AlreadyExistsException {
+        userService.addUser(user);
+        return ResponseEntity.ok("User was successfully add!");
     }
 
 }

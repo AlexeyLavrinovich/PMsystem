@@ -16,62 +16,41 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping("/tasks")
-    private ResponseEntity showProjectTasks(
+    public ResponseEntity showProjectTasks(
             @PathVariable Long projectId,
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<Integer> size,
             @RequestParam Optional<String> sortBy
     ) {
-        try {
-            return ResponseEntity.ok(taskService.projectTasks(projectId, page, size, sortBy));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
+        return ResponseEntity.ok(taskService.projectTasks(projectId, page, size, sortBy));
     }
 
     @PostMapping("/add")
-    private ResponseEntity addTask(
+    public ResponseEntity addTask(
             @PathVariable Long projectId,
             @RequestBody TaskEntity task
-            ) {
-        try {
-            taskService.addTask(projectId, task);
-            return ResponseEntity.ok("Task was successfully create!");
-        } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
+    ) throws NotFoundException {
+        taskService.addTask(projectId, task);
+        return ResponseEntity.ok("Task was successfully create!");
     }
 
     @PutMapping("/update")
-    private ResponseEntity updateTask(
+    public ResponseEntity updateTask(
             @PathVariable Long projectId,
             @RequestParam Long id,
             @RequestBody TaskEntity task
-    ) {
-        try {
-            taskService.updateTask(projectId, id, task);
-            return ResponseEntity.ok("Task was successfully update!");
-        } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
+    ) throws NotFoundException {
+        taskService.updateTask(projectId, id, task);
+        return ResponseEntity.ok("Task was successfully update!");
+
     }
 
     @DeleteMapping("/delete")
-    private ResponseEntity deleteTask(
+    public ResponseEntity deleteTask(
             @PathVariable Long projectId,
             @RequestParam Long id
-    ) {
-        try {
-            taskService.deleteTask(projectId, id);
-            return ResponseEntity.ok("Task was successfully delete!");
-        } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
+    ) throws NotFoundException {
+        taskService.deleteTask(projectId, id);
+        return ResponseEntity.ok("Task was successfully delete!");
     }
 }

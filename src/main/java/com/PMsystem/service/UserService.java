@@ -75,7 +75,7 @@ public class UserService implements UserDetailsService {
 
     public Optional<ProjectEntity> findProjectByName(UserEntity user, ProjectEntity project) {
         Optional<ProjectEntity> sameProjectName = user.getProjects().stream()
-                .filter(pr -> pr.equals(project))
+                .filter(pr -> pr.getName().equals(project.getName()))
                 .findAny();
         return sameProjectName;
     }
