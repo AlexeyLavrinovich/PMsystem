@@ -42,7 +42,6 @@ public class TaskController {
     ) throws NotFoundException {
         taskService.updateTask(projectId, id, task);
         return ResponseEntity.ok("Task was successfully update!");
-
     }
 
     @DeleteMapping("/delete")

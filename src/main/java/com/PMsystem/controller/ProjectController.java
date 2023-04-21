@@ -6,11 +6,13 @@ import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/projects")
 public class ProjectController {
 
@@ -18,13 +20,15 @@ public class ProjectController {
     private ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity getProjects(
+    public String getProjects(
             @RequestParam Long userId,
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<Integer> size,
-            @RequestParam Optional<String> sortBy
+            @RequestParam Optional<String> sortBy,
+            Model model
     ) {
-        return ResponseEntity.ok(projectService.getProjects(userId, page, size, sortBy));
+        model.addAttribute("projects", projectService.getProjects(userId, page, size, sortBy));
+        return "all-projects";
     }
 
     @GetMapping("/{id}")
@@ -41,7 +45,6 @@ public class ProjectController {
     ) throws AlreadyExistsException, NotFoundException {
         projectService.addProject(project, userId);
         return ResponseEntity.ok("Project was successfully create!");
-
     }
 
     @PutMapping("/{id}")
@@ -52,7 +55,6 @@ public class ProjectController {
     ) throws AlreadyExistsException, NotFoundException {
         projectService.renameProject(userId, id, project);
         return ResponseEntity.ok("Project was successfully renamed!");
-
     }
 
     @DeleteMapping("/{id}")

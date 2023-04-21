@@ -20,6 +20,7 @@ public class Project {
     private Long id;
     private String name;
     private String description;
+    private String creator;
 
     private List<Task> tasks;
 
@@ -28,6 +29,7 @@ public class Project {
         model.setId(entity.getId());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
+        model.setCreator(entity.getUser().getUsername());
         model.setTasks(entity.getTasks().stream().map(Task::toModel).collect(Collectors.toList()));
         return model;
     }

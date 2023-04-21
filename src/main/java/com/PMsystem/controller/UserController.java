@@ -16,7 +16,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity showUsers(){
+    public ResponseEntity showUsers() {
         return ResponseEntity.ok(userService.loadUsers());
     }
 
@@ -33,8 +33,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUser(@PathVariable Long id) throws NotFoundException {
-            userService.deleteUser(id);
-            return ResponseEntity.ok("User was successfully delete!");
-
+        userService.deleteUser(id);
+        return ResponseEntity.ok("User was successfully delete!");
     }
 }
