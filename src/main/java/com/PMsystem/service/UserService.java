@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.ROLE_USER));
-        user.setAdmin(false);
+        user.setIsAdmin(false);
         userRepo.save(user);
     }
 
@@ -59,10 +59,10 @@ public class UserService implements UserDetailsService {
 
     public void addRole(Long id) throws NotFoundException, AlreadyExistsException {
         UserEntity user = findUserById(id);
-        if (user.getAdmin()) {
+        if (user.getIsAdmin()) {
             throw new AlreadyExistsException("Admin status already set");
         }
-        user.setAdmin(true);
+        user.setIsAdmin(true);
         Set<Role> roles = user.getRoles();
         roles.add(Role.ROLE_ADMIN);
         user.setRoles(roles);

@@ -2,11 +2,19 @@ package com.PMsystem.model;
 
 import com.PMsystem.entity.Role;
 import com.PMsystem.entity.UserEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class User {
     private Long id;
     private String username;
@@ -18,52 +26,9 @@ public class User {
         User model = new User();
         model.setId(entity.getId());
         model.setUsername(entity.getUsername());
-        model.setAdmin(entity.getAdmin());
+        model.setIsAdmin(entity.getIsAdmin());
         model.setRoles(entity.getRoles());
         model.setProjects(entity.getProjects().stream().map(Project::toModel).collect(Collectors.toList()));
         return model;
-    }
-
-    public User() {
-    }
-
-    public List<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Boolean getAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 }

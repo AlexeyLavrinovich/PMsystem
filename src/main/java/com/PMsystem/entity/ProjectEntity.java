@@ -1,5 +1,9 @@
 package com.PMsystem.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -7,6 +11,10 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @SQLDelete(sql = "UPDATE project_entity SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
@@ -25,55 +33,4 @@ public class ProjectEntity {
     private List<TaskEntity> tasks;
 
     private boolean deleted = Boolean.FALSE;
-
-    public ProjectEntity() {
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<TaskEntity> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<TaskEntity> tasks) {
-        this.tasks = tasks;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String projectName) {
-        this.name = projectName;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProjectEntity project = (ProjectEntity) o;
-        return Objects.equals(name, project.name);
-    }
 }
