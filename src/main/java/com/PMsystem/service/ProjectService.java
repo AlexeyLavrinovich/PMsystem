@@ -34,7 +34,7 @@ public class ProjectService {
                 PageRequest.of(
                         page.orElse(0),
                         size.orElse(5),
-                        Sort.Direction.ASC, sortBy.orElse("id")
+                        Sort.Direction.DESC, sortBy.orElse("id")
                 )
         )
                 .stream().filter(projectEntity -> projectEntity.getUser().getId().equals(userId))

@@ -30,8 +30,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/users/**").hasRole("ADMIN")
                     .antMatchers("/projects/**").hasRole("USER")
                     .antMatchers("/registration").permitAll()
-
                     .anyRequest().authenticated()
+                .and().formLogin().permitAll()
+                .defaultSuccessUrl("/all-projects", true)
+                .and().logout().permitAll()
                 .and().httpBasic()
                 .and().sessionManagement().disable();
     }
