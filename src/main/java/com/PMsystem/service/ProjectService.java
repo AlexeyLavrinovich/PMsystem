@@ -56,7 +56,9 @@ public class ProjectService {
     }
 
     public void deleteProject(Long id) throws NotFoundException {
-        projectRepo.delete(findProjectById(id));
+        ProjectEntity project = findProjectById(id);
+        project.setDeleted(true);
+        projectRepo.save(project);
     }
 
     public void renameProject(Long userId, Long id, ProjectEntity newProject) throws NotFoundException, AlreadyExistsException {

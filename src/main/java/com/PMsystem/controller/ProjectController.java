@@ -62,24 +62,25 @@ public class ProjectController {
             return "add-project";
         }
         projectService.addProject(project, userId);
-        return "redirect:/users/get/{" + userId + "}";
+        return "redirect:/users/get/" + userId;
     }
+//
+//    @PutMapping("/{id}")
+//    public ResponseEntity renameProject(
+//            @RequestParam Long userId,
+//            @PathVariable Long id,
+//            @RequestBody ProjectEntity project
+//    ) throws AlreadyExistsException, NotFoundException {
+//        projectService.renameProject(userId, id, project);
+//        return ResponseEntity.ok("Project was successfully renamed!");
+//    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity renameProject(
-            @RequestParam Long userId,
-            @PathVariable Long id,
-            @RequestBody ProjectEntity project
-    ) throws AlreadyExistsException, NotFoundException {
-        projectService.renameProject(userId, id, project);
-        return ResponseEntity.ok("Project was successfully renamed!");
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteProject(
+    @GetMapping("/delete/{id}")
+    public String deleteProject(
             @PathVariable Long id
     ) throws NotFoundException {
+        Long userId = projectService.findProjectById(id).getUser().getId();
         projectService.deleteProject(id);
-        return ResponseEntity.ok("Project was successfully delete!");
+        return "redirect:/users/get/" + userId;
     }
 }
