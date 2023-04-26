@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -20,8 +21,10 @@
             <th scope="col">ID</th>
             <th scope="col">Username</th>
             <th scope="col">Admin</th>
-            <div>
+            <th scope="col"></th>
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')">
                 <th scope="col"></th>
+<!--                <th scope="col"></th>-->
             </div>
         </tr>
         </thead>
@@ -31,8 +34,14 @@
             <td th:text="${us.id}"></td>
             <td th:text="${us.username}"></td>
             <td th:text="${us.isAdmin}"></td>
-            <div>
-                <td><a th:href="@{/users/get/{id}(id = ${us.id})}" class="btn btn-primary">Info</a></td>
+            <td><a th:href="@{/users/get/{id}(id = ${us.id})}" class="btn btn-primary">Info</a></td>
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                <td>
+                    <span th:if="${!us.isAdmin}">
+                        <a th:href="@{/users/upgrade/{id}(id = ${us.id})}" class="btn btn-primary">Upgrade</a>
+                    </span>
+                </td>
+<!--                <td><a th:href="@{/users/delete/{id}(id = ${us.id})}" class="btn btn-primary">Delete</a></td>-->
             </div>
         </tr>
         </tbody>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -40,13 +41,28 @@ public class ProjectController {
         return "project";
     }
 
-    @PostMapping
-    public ResponseEntity createProject(
+    @GetMapping("/create")
+    public String showCreateProjectForm(
             @RequestParam Long userId,
-            @RequestBody ProjectEntity project
+            Model model
+    ) {
+        ProjectEntity project = new ProjectEntity();
+        model.addAttribute("userId", userId);
+        model.addAttribute("project", project);
+        return "add-project";
+    }
+
+    @PostMapping("/create")
+    public String createProject(
+            @RequestParam Long userId,
+            @RequestBody ProjectEntity project,
+            BindingResult result
     ) throws AlreadyExistsException, NotFoundException {
+        if (result.hasErrors()) {
+            return "add-project";
+        }
         projectService.addProject(project, userId);
-        return ResponseEntity.ok("Project was successfully create!");
+        return "redirect:/users/get/{" + userId + "}";
     }
 
     @PutMapping("/{id}")

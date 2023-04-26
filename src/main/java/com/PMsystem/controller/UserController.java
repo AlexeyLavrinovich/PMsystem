@@ -28,15 +28,15 @@ public class UserController {
         return "user";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity changeRole(@PathVariable Long id) throws AlreadyExistsException, NotFoundException {
+    @GetMapping("/upgrade/{id}")
+    public String changeRole(@PathVariable Long id) throws AlreadyExistsException, NotFoundException {
         userService.addRole(id);
-        return ResponseEntity.ok("User was successfully update!");
+        return "redirect:/users";
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable Long id) throws NotFoundException {
-        userService.deleteUser(id);
-        return ResponseEntity.ok("User was successfully delete!");
-    }
+//
+//    @GetMapping("/delete/{id}")
+//    public String deleteUser(@PathVariable Long id) throws NotFoundException {
+//        userService.deleteUser(id);
+//        return "redirect:/users";
+//    }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -22,6 +23,7 @@
             <th scope="col">ID</th>
             <th scope="col">Project name</th>
             <th scope="col">Description</th>
+            <th scope="col"></th>
             <div>
                 <th scope="col"></th>
             </div>
@@ -32,13 +34,18 @@
             <td th:text="${project.id}"></td>
             <td th:text="${project.name}"></td>
             <td th:text="${project.description}"></td>
+            <td><a th:href="@{/projects/{id}(id = ${project.id})}" class="btn btn-primary">Info</a></td>
             <div>
-                <td><a th:href="@{/projects/{id}(id = ${project.id})}" class="btn btn-primary">Info</a></td>
+                <td><a th:href="@{/projects/{id}(id = ${project.id})}" class="btn btn-primary"></a></td>
             </div>
         </tr>
         </tbody>
 
     </table>
+    <div>
+        <p class="my-5"><a th:href="@{/projects/create?userId={userId}(userId = ${user.id})}" class="btn btn-primary">Create</a>
+        </p>
+    </div>
 </div>
 </body>
 </html>
