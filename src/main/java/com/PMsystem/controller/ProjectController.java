@@ -32,10 +32,12 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getOneProject(
-            @PathVariable Long id
+    public String getOneProject(
+            @PathVariable Long id,
+            Model model
     ) throws NotFoundException {
-        return ResponseEntity.ok(projectService.getOneProject(id));
+        model.addAttribute("project", projectService.getOneProject(id));
+        return "project";
     }
 
     @PostMapping

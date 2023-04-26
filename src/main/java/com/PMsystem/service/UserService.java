@@ -102,7 +102,7 @@ public class UserService implements UserDetailsService {
 
     public void updateEncode(){
         List<UserEntity> users = userRepo.findAll();
-        if (users.size() < 4) {
+        if (users.size() < 3 && users.get(1).getPassword().equals("1111")) {
             for (UserEntity userEntity:
                  users) {
                 userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
