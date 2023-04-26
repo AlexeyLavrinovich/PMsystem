@@ -30,12 +30,12 @@ public class ProjectService {
             Optional<Integer> size,
             Optional<String> sortBy
     ) {
-        return  new PageImpl<Project>(projectRepo.findAll(
-                PageRequest.of(
-                        page.orElse(0),
-                        size.orElse(5),
-                        Sort.Direction.DESC, sortBy.orElse("id")
-                )
+        return new PageImpl<Project>(projectRepo.findAll(
+//                PageRequest.of(
+//                        page.orElse(0),
+//                        size.orElse(5),
+//                        Sort.Direction.DESC, sortBy.orElse("id")
+//                )
         )
                 .stream().filter(projectEntity -> projectEntity.getUser().getId().equals(userId))
                 .map(Project::toModel)

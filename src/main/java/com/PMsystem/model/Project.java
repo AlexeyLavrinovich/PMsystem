@@ -30,7 +30,7 @@ public class Project {
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
         model.setCreator(entity.getUser().getUsername());
-        model.setTasks(entity.getTasks().stream().map(Task::toModel).collect(Collectors.toList()));
+        model.setTasks(entity.getTasks().stream().map(Task::toModel).distinct().collect(Collectors.toList()));
         return model;
     }
 }

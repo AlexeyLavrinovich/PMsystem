@@ -3,12 +3,13 @@ package com.PMsystem.controller;
 import com.PMsystem.exception.AlreadyExistsException;
 import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.service.UserService;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/users")
 public class UserController {
 
@@ -16,13 +17,15 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity showUsers() {
-        return ResponseEntity.ok(userService.loadUsers());
+    public String showUsers(Model model) {
+        model.addAttribute("users", userService.loadUsers());
+        return "all-users";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity showOne(@PathVariable Long id) throws NotFoundException {
-        return ResponseEntity.ok(userService.loadUserById(id));
+    @GetMapping("/get/{id}")
+    public String showOne(@PathVariable Long id, Model model) throws NotFoundException {
+        model.addAttribute("user", userService.loadUserById(id));
+        return "user";
     }
 
     @PutMapping("/{id}")

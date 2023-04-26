@@ -28,7 +28,7 @@ public class User {
         model.setUsername(entity.getUsername());
         model.setIsAdmin(entity.getIsAdmin());
         model.setRoles(entity.getRoles());
-        model.setProjects(entity.getProjects().stream().map(Project::toModel).collect(Collectors.toList()));
+        model.setProjects(entity.getProjects().stream().map(Project::toModel).distinct().collect(Collectors.toList()));
         return model;
     }
 }
