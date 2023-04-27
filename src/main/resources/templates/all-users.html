@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -21,7 +21,7 @@
             <th scope="col">Username</th>
             <th scope="col">Admin</th>
             <th scope="col"></th>
-            <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <div sec:authorize="hasRole('ADMIN')">
                 <th scope="col"></th>
 <!--                <th scope="col"></th>-->
             </div>
@@ -33,7 +33,7 @@
             <td th:text="${us.username}"></td>
             <td th:text="${us.isAdmin}"></td>
             <td><a th:href="@{/users/get/{id}(id = ${us.id})}" class="btn btn-primary">Info</a></td>
-            <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <div sec:authorize="hasRole('ADMIN')">
                 <td>
                     <span th:if="${!us.isAdmin}">
                         <a th:href="@{/users/upgrade/{id}(id = ${us.id})}" class="btn btn-primary">Upgrade</a>

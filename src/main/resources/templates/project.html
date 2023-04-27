@@ -21,16 +21,31 @@
         <tr>
             <th scope="col">ID</th>
             <th scope="col">Task name</th>
+            <div>
+                <th scope="col"></th>
+            </div>
         </tr>
         </thead>
         <tbody>
         <tr th:each="task: ${project.tasks}">
             <td th:text="${task.id}"></td>
             <td th:text="${task.task}"></td>
+            <div>
+                <td>
+                    <a th:href="@{/users/get/{userId}/projects/{projectId}/tasks/{id}(userId = ${userId}, projectId = ${project.id}, id = ${task.id})}"
+                       class="btn btn-primary">Delete</a>
+                </td>
+            </div>
         </tr>
         </tbody>
 
     </table>
+    <div>
+        <p class="my-5">
+            <a th:href="@{/users/get/{userId}/projects/{projectId}/tasks/new(userId = ${userId}, projectId = ${project.id})}"
+               class="btn btn-primary">Create</a>
+        </p>
+    </div>
 </div>
 </body>
 </html>

@@ -33,7 +33,7 @@
             <td th:text="${project.name}"></td>
             <td th:text="${project.description}"></td>
             <td>
-                <a th:href="@{/users/get/{userId}/projects/{id}(userId = ${userId}, id = ${project.id})}"
+                <a th:href="@{/users/get/{userId}/projects/{projectId}/tasks(userId = ${userId}, projectId = ${project.id})}"
                    class="btn btn-primary">Info</a>
             </td>
             <div>

@@ -32,15 +32,6 @@ public class ProjectController {
         return "all-projects";
     }
 
-    @GetMapping("/{id}")
-    public String getOneProject(
-            @PathVariable Long id,
-            Model model
-    ) throws NotFoundException {
-        model.addAttribute("project", projectService.getOneProject(id));
-        return "project";
-    }
-
     @GetMapping("/create")
     public String showCreateProjectForm(
             @PathVariable Long userId,
