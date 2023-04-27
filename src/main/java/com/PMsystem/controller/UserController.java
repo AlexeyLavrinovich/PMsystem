@@ -24,6 +24,7 @@ public class UserController {
 
     @GetMapping("/get/{id}")
     public String showOne(@PathVariable Long id, Model model) throws NotFoundException {
+        model.addAttribute("userId", id);
         model.addAttribute("user", userService.loadUserById(id));
         return "user";
     }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/projects")
+@RequestMapping("/users/get/{userId}/projects")
 public class ProjectController {
 
     @Autowired
@@ -22,7 +22,7 @@ public class ProjectController {
 
     @GetMapping
     public String getProjects(
-            @RequestParam Long userId,
+            @PathVariable Long userId,
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<Integer> size,
             @RequestParam Optional<String> sortBy,
@@ -43,7 +43,7 @@ public class ProjectController {
 
     @GetMapping("/create")
     public String showCreateProjectForm(
-            @RequestParam Long userId,
+            @PathVariable Long userId,
             Model model
     ) {
         ProjectEntity project = new ProjectEntity();
@@ -54,7 +54,7 @@ public class ProjectController {
 
     @PostMapping("/create")
     public String createProject(
-            @RequestParam Long userId,
+            @PathVariable Long userId,
             @ModelAttribute ProjectEntity project,
             BindingResult result
     ) throws AlreadyExistsException, NotFoundException {

@@ -18,7 +18,6 @@
     <table class="table table-striped table-responsive-md">
         <thead>
         <tr>
-            <th scope="col">ID</th>
             <th scope="col">Username</th>
             <th scope="col">Admin</th>
             <th scope="col"></th>
@@ -31,7 +30,6 @@
 
         <tbody>
         <tr th:each="us: ${users}">
-            <td th:text="${us.id}"></td>
             <td th:text="${us.username}"></td>
             <td th:text="${us.isAdmin}"></td>
             <td><a th:href="@{/users/get/{id}(id = ${us.id})}" class="btn btn-primary">Info</a></td>
