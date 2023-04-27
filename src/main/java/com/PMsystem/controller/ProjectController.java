@@ -55,7 +55,7 @@ public class ProjectController {
     @PostMapping("/create")
     public String createProject(
             @RequestParam Long userId,
-            @RequestBody ProjectEntity project,
+            @ModelAttribute ProjectEntity project,
             BindingResult result
     ) throws AlreadyExistsException, NotFoundException {
         if (result.hasErrors()) {
