@@ -6,74 +6,72 @@ import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/projects")
+@Controller
+@RequestMapping("/users/get/{userId}/projects")
 public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
 
     @GetMapping
-    private ResponseEntity getProjects(
+    public String getProjects(
+            @PathVariable Long userId,
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<Integer> size,
-            @RequestParam Optional<String> sortBy
+            @RequestParam Optional<String> sortBy,
+            Model model
     ) {
-        try {
-            return ResponseEntity.ok(projectService.getProjects(page, size, sortBy));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
+        model.addAttribute("projects", projectService.getProjects(userId, page, size, sortBy));
+        return "all-projects";
     }
 
-    @GetMapping("/{id}")
-    private ResponseEntity getOneProject(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(projectService.getOneProject(id));
-        } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
+    @GetMapping("/create")
+    public String showCreateProjectForm(
+            @PathVariable Long userId,
+            Model model
+    ) {
+        ProjectEntity project = new ProjectEntity();
+        model.addAttribute("userId", userId);
+        model.addAttribute("project", project);
+        return "add-project";
     }
 
-    @PostMapping
-    private ResponseEntity createProject(@RequestParam Long userId,@RequestBody ProjectEntity project) {
-        try {
-            projectService.addProject(project, userId);
-            return ResponseEntity.ok("Project was successfully create!");
-        } catch (NotFoundException | AlreadyExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Something bad happened...");
+    @PostMapping("/create")
+    public String createProject(
+            @PathVariable Long userId,
+            @ModelAttribute ProjectEntity project,
+            BindingResult result
+    ) throws AlreadyExistsException, NotFoundException {
+        if (result.hasErrors()) {
+            return "add-project";
         }
+        projectService.addProject(project, userId);
+        return "redirect:/users/get/" + userId;
     }
+//
+//    @PutMapping("/{id}")
+//    public ResponseEntity renameProject(
+//            @RequestParam Long userId,
+//            @PathVariable Long id,
+//            @RequestBody ProjectEntity project
+//    ) throws AlreadyExistsException, NotFoundException {
+//        projectService.renameProject(userId, id, project);
+//        return ResponseEntity.ok("Project was successfully renamed!");
+//    }
 
-    @PutMapping("/{id}")
-    private ResponseEntity renameProject(@RequestParam Long userId, @PathVariable Long id, @RequestBody ProjectEntity project) {
-        try {
-            projectService.renameProject(userId, id, project);
-            return ResponseEntity.ok("Project was successfully renamed!");
-        } catch (NotFoundException | AlreadyExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    private ResponseEntity deleteProject(@PathVariable Long id) {
-        try {
-            projectService.deleteProject(id);
-            return ResponseEntity.ok("Project was successfully delete!");
-        } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            return ResponseEntity.badRequest().body("Something bad happened...");
-        }
+    @GetMapping("/delete/{id}")
+    public String deleteProject(
+            @PathVariable Long id
+    ) throws NotFoundException {
+        Long userId = projectService.findProjectById(id).getUser().getId();
+        projectService.deleteProject(id);
+        return "redirect:/users/get/" + userId;
     }
 }

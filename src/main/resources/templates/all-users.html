@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Project List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="container my-5" th:switch="${users}">
+    <h2 class="mb-5">All users: </h2>
+    <table class="table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Admin</th>
+            <th scope="col"></th>
+            <div sec:authorize="hasRole('ADMIN')">
+                <th scope="col"></th>
+<!--                <th scope="col"></th>-->
+            </div>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="us: ${users}">
+            <td th:text="${us.username}"></td>
+            <td th:text="${us.isAdmin}"></td>
+            <td><a th:href="@{/users/get/{id}(id = ${us.id})}" class="btn btn-primary">Info</a></td>
+            <div sec:authorize="hasRole('ADMIN')">
+                <td>
+                    <span th:if="${!us.isAdmin}">
+                        <a th:href="@{/users/upgrade/{id}(id = ${us.id})}" class="btn btn-primary">Upgrade</a>
+                    </span>
+                </td>
+<!--                <td><a th:href="@{/users/delete/{id}(id = ${us.id})}" class="btn btn-primary">Delete</a></td>-->
+            </div>
+        </tr>
+        </tbody>
+    </table>
+    <div class="container my-5" sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/users/registration}" class="btn btn-primary">Create user</a></td>
+    </div>
+</div>
+</body>
+</html>

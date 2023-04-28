@@ -8,6 +8,7 @@ import com.PMsystem.exception.NotFoundException;
 import com.PMsystem.model.User;
 import com.PMsystem.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepo userRepo;
+    @Lazy
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -37,7 +39,7 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.ROLE_USER));
-        user.setAdmin(false);
+        user.setIsAdmin(false);
         userRepo.save(user);
     }
 
@@ -59,10 +61,10 @@ public class UserService implements UserDetailsService {
 
     public void addRole(Long id) throws NotFoundException, AlreadyExistsException {
         UserEntity user = findUserById(id);
-        if (user.getAdmin()) {
+        if (user.getIsAdmin()) {
             throw new AlreadyExistsException("Admin status already set");
         }
-        user.setAdmin(true);
+        user.setIsAdmin(true);
         Set<Role> roles = user.getRoles();
         roles.add(Role.ROLE_ADMIN);
         user.setRoles(roles);
@@ -75,7 +77,7 @@ public class UserService implements UserDetailsService {
 
     public Optional<ProjectEntity> findProjectByName(UserEntity user, ProjectEntity project) {
         Optional<ProjectEntity> sameProjectName = user.getProjects().stream()
-                .filter(pr -> pr.equals(project))
+                .filter(pr -> pr.getName().equals(project.getName()))
                 .findAny();
         return sameProjectName;
     }
@@ -96,5 +98,16 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
         return user;
+    }
+
+    public void updateEncode(){
+        List<UserEntity> users = userRepo.findAll();
+        if (users.size() < 3 && users.get(1).getPassword().equals("1111")) {
+            for (UserEntity userEntity:
+                 users) {
+                userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+                userRepo.save(userEntity);
+            }
+        }
     }
 }

@@ -8,11 +8,13 @@ import com.PMsystem.model.Project;
 import com.PMsystem.repository.ProjectRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -23,17 +25,22 @@ public class ProjectService {
     private UserService userService;
 
     public Page<Project> getProjects(
+            Long userId,
             Optional<Integer> page,
             Optional<Integer> size,
             Optional<String> sortBy
     ) {
-        return projectRepo.findAll(
-                PageRequest.of(
-                        page.orElse(0),
-                        size.orElse(5),
-                        Sort.Direction.DESC, sortBy.orElse("id")
-                )
-        ).map(Project::toModel);
+        return new PageImpl<Project>(projectRepo.findAll(
+//                PageRequest.of(
+//                        page.orElse(0),
+//                        size.orElse(5),
+//                        Sort.Direction.DESC, sortBy.orElse("id")
+//                )
+        )
+                .stream().filter(projectEntity -> projectEntity.getUser().getId().equals(userId))
+                .map(Project::toModel)
+                .collect(Collectors.toList()));
+
     }
 
     public void addProject(ProjectEntity project, Long userId) throws NotFoundException, AlreadyExistsException {
@@ -49,7 +56,9 @@ public class ProjectService {
     }
 
     public void deleteProject(Long id) throws NotFoundException {
-        projectRepo.delete(findProjectById(id));
+        ProjectEntity project = findProjectById(id);
+        project.setDeleted(true);
+        projectRepo.save(project);
     }
 
     public void renameProject(Long userId, Long id, ProjectEntity newProject) throws NotFoundException, AlreadyExistsException {

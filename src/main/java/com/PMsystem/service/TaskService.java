@@ -63,11 +63,13 @@ public class TaskService {
         if (task.isEmpty()){
             throw new NotFoundException("Can't find task!");
         }
-        return taskRepo.findById(id).get();
+        return task.get();
     }
 
     public void deleteTask(Long projectId, Long id) throws NotFoundException {
         findProjectById(projectId);
-        taskRepo.delete(findTaskById(id));
+        TaskEntity task = findTaskById(id);
+        task.setDeleted(true);
+        taskRepo.save(task);
     }
 }
