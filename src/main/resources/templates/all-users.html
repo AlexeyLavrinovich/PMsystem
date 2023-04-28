@@ -43,8 +43,10 @@
             </div>
         </tr>
         </tbody>
-
     </table>
+    <div class="container my-5" sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/users/registration}" class="btn btn-primary">Create user</a></td>
+    </div>
 </div>
 </body>
 </html>
